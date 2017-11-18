@@ -97,9 +97,11 @@ $(function() {
     describe('New Feed Selection',function() {
        var content;
        beforeEach(function(done) {
-            content = $('.feed').html();
-            loadFeed(3, done);
-        });
+          content = $('.feed').html();
+          for(var i = allFeeds.length -1; i >=0; i-- ) {
+             loadFeed(3, done);
+          }        
+       });
         /* TODO:
          * 写一个测试保证当用 loadFeed 函数加载一个新源的时候内容会真的改变。
          * 记住，loadFeed() 函数是异步的。
