@@ -28,7 +28,7 @@ $(function() {
          */
         it('url of every feed should not null',function() {
             allFeeds.forEach(function(item) {
-                expect(item.url).not.toBeNull();
+                expect(item.url.trim()).toBeTruthy();
             });
         })
 
@@ -37,7 +37,7 @@ $(function() {
          */ 
         it('name of every feed should not null',function() {
             allFeeds.forEach(function(item) {
-                expect(item.name).not.toBeNull();
+                expect(item.name.trim()).toBeTruthy();
             });
         })
 
@@ -57,7 +57,7 @@ $(function() {
          * 来搞清楚我们是怎么实现隐藏/展示菜单元素的。
          */
         it('The menu should be closed by default',function() {
-            expect($body.hasClass('menu-hidden')).toBeTruthy();
+            expect($body.hasClass('menu-hidden')).toBe(true);
         });
 
          /* TODO:
@@ -67,9 +67,9 @@ $(function() {
           */
         it('The menu should be switched with the click of the button',function() {
             $menuIcon.trigger('click');
-            expect($body.hasClass('menu-hidden')).toBeFalsy();
+            expect($body.hasClass('menu-hidden')).toBe(false);
             $menuIcon.trigger('click');
-            expect($body.hasClass('menu-hidden')).toBeTruthy();
+            expect($body.hasClass('menu-hidden')).toBe(true);
         });
     });
     /* TODO: 13. 写一个叫做 "Initial Entries" 的测试用例 */
@@ -87,28 +87,30 @@ $(function() {
          * 记住 loadFeed() 函数是异步的所以这个而是应该使用 Jasmine 的 beforeEach
          * 和异步的 done() 函数。
          */
-        it('function loadFeed works',function(done) {
+        it('function loadFeed works',function() {
             expect($feed.find('.entry').length).toBeGreaterThan(0);
             expect(content).not.toBe($('.feed').html());
-            done();
         });
     });
     /* TODO: 写一个叫做 "New Feed Selection" 的测试用例 */
     describe('New Feed Selection',function() {
-       var content;
+       var content1,content2;
        beforeEach(function(done) {
-          content = $('.feed').html();
-          for(var i = allFeeds.length -1; i >=0; i-- ) {
-             loadFeed(3, done);
-          }        
+          loadFeed(1,function() {
+              content1 = $('.feed').html();
+
+              loadFeed(0,function() {
+                  content2 = $('.feed').html(); 
+                  done(); 
+              }) 
+          })     
        });
         /* TODO:
          * 写一个测试保证当用 loadFeed 函数加载一个新源的时候内容会真的改变。
          * 记住，loadFeed() 函数是异步的。
          */
-        it('content in container with class feed should be changed when function loadFeed works',function(done) {
-             expect(content).not.toBe($('.feed').html());
-             done();
+        it('content in container with class feed should be changed when function loadFeed works',function() {
+             expect(content1).not.toBe(content2);
         }); 
    });
 }());
